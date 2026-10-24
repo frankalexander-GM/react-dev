@@ -11,6 +11,7 @@ import {
   MessageSquare,
   PenSquare,
   Rocket,
+  Search,
   Settings,
   ShieldAlert,
   Store,
@@ -121,7 +122,7 @@ function UserCard() {
   if (!user) return null
 
   return (
-    <div className="mt-auto pt-4">
+    <div className="pt-1">
       <div className="glass-soft p-3">
         <div className="flex items-center gap-2.5">
           <Link to={`/u/${user.id}`} className="shrink-0">
@@ -177,29 +178,36 @@ function UserCard() {
 
 export function Sidebar() {
   return (
-    <aside className="sticky top-0 hidden h-screen w-[258px] shrink-0 flex-col overflow-y-auto border-r border-line bg-surface/60 px-3.5 py-4 backdrop-blur-xl lg:flex">
-      <div className="px-1.5 pb-5">
+    <aside className="sticky top-0 hidden h-screen w-[258px] shrink-0 flex-col overflow-hidden border-r border-line bg-surface/60 px-3.5 py-4 backdrop-blur-xl lg:flex">
+      <div className="shrink-0 px-1.5 pb-3">
         <Brand />
       </div>
-      <NavSection title="Menú principal" />
-      <SideNav />
-      <CreateSection />
-      <div className="mt-5">
-        <NavSection title="Ayuda" />
-        <div className="flex flex-col gap-0.5">
-          {HELP_NAV.map(({ to, label, icon: Icon }) => (
-            <NavLink
-              key={to}
-              to={to}
-              className={({ isActive }) => clsx('nav-item', isActive && 'nav-item-active')}
-            >
-              <Icon size={17} strokeWidth={2} />
-              <span>{label}</span>
-            </NavLink>
-          ))}
+
+      {/* Solo el menú scrollea: la marca y la tarjeta de usuario quedan fijas. */}
+      <div className="min-h-0 flex-1 overflow-y-auto pr-0.5">
+        <NavSection title="Menú principal" />
+        <SideNav />
+        <CreateSection />
+        <div className="mt-4">
+          <NavSection title="Ayuda" />
+          <div className="flex flex-col gap-0.5">
+            {HELP_NAV.map(({ to, label, icon: Icon }) => (
+              <NavLink
+                key={to}
+                to={to}
+                className={({ isActive }) => clsx('nav-item', isActive && 'nav-item-active')}
+              >
+                <Icon size={17} strokeWidth={2} />
+                <span>{label}</span>
+              </NavLink>
+            ))}
+          </div>
         </div>
       </div>
-      <UserCard />
+
+      <div className="shrink-0 pt-2">
+        <UserCard />
+      </div>
     </aside>
   )
 }
@@ -242,7 +250,7 @@ export function Topbar({ onMenu }: { onMenu: () => void }) {
   useEffect(() => setMenuOpen(false), [location.pathname])
 
   return (
-    <header className="sticky top-0 z-40 flex h-[62px] items-center gap-2 border-b border-line bg-surface/85 px-3 backdrop-blur-xl sm:px-4">
+    <header className="sticky top-0 z-40 flex h-[62px] items-center gap-2 border-b border-line bg-surface/95 px-3 shadow-[0_12px_30px_-24px_rgba(0,0,0,0.95)] backdrop-blur-xl sm:px-4">
       <button type="button" onClick={onMenu} className="icon-btn lg:hidden" aria-label="Abrir menú">
         <Menu size={22} />
       </button>
@@ -256,6 +264,10 @@ export function Topbar({ onMenu }: { onMenu: () => void }) {
       <div className="flex-1 sm:hidden" />
 
       <div className="flex items-center gap-1.5">
+        <Link to="/search" className="icon-btn sm:hidden" aria-label="Buscar">
+          <Search size={19} />
+        </Link>
+
         {user && !isGuest && (
           <button
             type="button"

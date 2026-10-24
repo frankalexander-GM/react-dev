@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useLayoutEffect, useRef, useState } from 'react'
 import { Outlet, useLocation } from 'react-router-dom'
 import { Sidebar, Topbar, MobileDrawer } from './Chrome'
 import { CreateProvider } from '../create/CreateProvider'
@@ -9,10 +9,10 @@ export function AppShell() {
   const location = useLocation()
   const mainRef = useRef<HTMLElement>(null)
 
-  // Al cambiar de vista se vuelve arriba (como el Navigator de Flutter).
-  useEffect(() => {
-    window.scrollTo({ top: 0, behavior: 'instant' as ScrollBehavior })
-    mainRef.current?.scrollTo?.({ top: 0 })
+  // Al cambiar de vista se vuelve arriba antes de pintar (sin saltos visibles).
+  useLayoutEffect(() => {
+    window.scrollTo(0, 0)
+    mainRef.current?.scrollTo?.(0, 0)
   }, [location.pathname])
 
   return (
